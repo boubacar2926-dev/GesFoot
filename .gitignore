@@ -1,0 +1,10 @@
+# Logs contenant des données sensibles (mots de passe temporaires)
+/logs/*.log
+
+# Fichiers uploadés par les utilisateurs
+/assets/uploads/**
+!/assets/uploads/club/.gitkeep
+
+# Fichiers système
+Thumbs.db
+.DS_Store

@@ -1,0 +1,250 @@
+/* ============================================================
+   Football Club Platform — Custom Styles
+   ============================================================ */
+
+:root {
+    --fc-green:      #2d6a4f;
+    --fc-green-dark: #1b4332;
+    --fc-green-light:#52b788;
+    --fc-gold:       #f4a261;
+    --sidebar-bg:    #0f1923;
+    --sidebar-width: 260px;
+    --topbar-h:      62px;
+}
+
+/* ---- Base ---- */
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+/* ---- Sidebar ---- */
+.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    z-index: 1040;
+    display: flex;
+    flex-direction: column;
+    transition: transform .3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-brand {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--fc-green-dark);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.sidebar-brand .brand-icon {
+    width: 40px; height: 40px;
+    background: var(--fc-green);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+.sidebar-brand .brand-text { color: #fff; font-weight: 700; font-size: 1rem; line-height: 1.2; }
+.sidebar-brand .brand-sub  { color: rgba(255,255,255,.5); font-size: .7rem; }
+
+.sidebar-section {
+    padding: 16px 12px 4px;
+    color: rgba(255,255,255,.35);
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    margin: 2px 8px;
+    border-radius: 6px;
+    color: rgba(255,255,255,.65);
+    text-decoration: none;
+    font-size: .88rem;
+    transition: background .15s, color .15s;
+}
+.sidebar nav a i { font-size: 1.05rem; flex-shrink: 0; width: 20px; text-align: center; }
+.sidebar nav a:hover { background: rgba(255,255,255,.07); color: #fff; }
+.sidebar nav a.active { background: var(--fc-green); color: #fff; font-weight: 600; }
+.sidebar nav a .badge { margin-left: auto; }
+
+/* ---- Main layout ---- */
+.main-wrapper {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---- Topbar ---- */
+.topbar {
+    height: var(--topbar-h);
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    gap: 12px;
+}
+.topbar .page-title { font-weight: 600; font-size: 1rem; color: #1e293b; }
+.topbar .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.topbar .user-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 30px;
+    padding: 4px 14px 4px 4px;
+    font-size: .85rem; cursor: pointer;
+}
+.topbar .user-chip img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+
+/* ---- Page content ---- */
+.page-content { padding: 24px; flex: 1; }
+
+/* ---- Stats Cards ---- */
+.stat-card {
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    transition: box-shadow .15s;
+    background: #fff;
+}
+.stat-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+.stat-card .stat-icon {
+    width: 44px; height: 44px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+.stat-card .stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+.stat-card .stat-label { color: #64748b; font-size: .82rem; margin-top: 3px; }
+
+/* ---- Cards ---- */
+.card {
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.card-header {
+    background: #fff;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 14px 20px;
+    border-radius: 8px 8px 0 0 !important;
+    font-weight: 600;
+    font-size: .9rem;
+}
+.card-body { padding: 20px; }
+
+/* ---- Table ---- */
+.table-card .table { margin: 0; }
+.table thead th {
+    background: #f1f5f9;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 14px;
+    white-space: nowrap;
+}
+.table tbody td { padding: 12px 14px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
+.table tbody tr:hover { background: #fafbfc; }
+.table tbody tr:last-child td { border-bottom: none; }
+
+/* ---- Avatar ---- */
+.avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.avatar-sm { width: 28px; height: 28px; }
+.avatar-lg { width: 56px; height: 56px; }
+
+/* ---- Buttons ---- */
+.btn-sm { padding: 4px 10px; font-size: .8rem; }
+.btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; }
+
+/* ---- Forms ---- */
+.form-label { font-weight: 600; font-size: .85rem; color: #374151; }
+.form-control, .form-select {
+    border-radius: 6px;
+    border-color: #e2e8f0;
+    font-size: .9rem;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--fc-green);
+    box-shadow: 0 0 0 3px rgba(45,106,79,.12);
+}
+
+/* ---- Badges ---- */
+.badge { font-size: .72rem; font-weight: 600; padding: 3px 7px; border-radius: 4px; }
+
+/* ---- Player card ---- */
+.player-card {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow .15s;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+}
+.player-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.player-card .player-header {
+    background: var(--fc-green-dark);
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+.player-card .player-header img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.3); }
+.player-card .player-num { background: rgba(255,255,255,.15); border-radius: 4px; padding: 2px 8px; font-size: .8rem; display: inline-block; margin-top: 4px; }
+
+/* ---- Score display ---- */
+.score-display { font-size: 2rem; font-weight: 800; letter-spacing: .05em; }
+.score-vs { font-size: .8rem; color: #64748b; text-transform: uppercase; }
+
+/* ---- Login page ---- */
+.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, #1b4332 0%, #142e23 100%); padding: 1rem; }
+.login-card { max-width: 420px; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+.login-header { background: rgba(255,255,255,.06); backdrop-filter: blur(10px); padding: 32px; text-align: center; color: #fff; border-bottom: 1px solid rgba(255,255,255,.08); }
+.login-body { background: #fff; padding: 32px; }
+
+/* ---- Responsive ---- */
+@media (max-width: 991.98px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-wrapper { margin-left: 0; }
+    .sidebar-overlay { display: block !important; }
+}
+
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1039; }
+
+/* ---- Scroll ---- */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 4px; }
+
+/* ---- Misc ---- */
+.text-green { color: var(--fc-green) !important; }
+.bg-green   { background-color: var(--fc-green) !important; }
+.divider { border-top: 1px solid #f1f5f9; margin: 16px 0; }
+.section-title { font-weight: 600; font-size: .95rem; color: #1e293b; margin-bottom: 16px; }

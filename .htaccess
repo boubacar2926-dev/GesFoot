@@ -1,0 +1,13 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /projet_fin/
+
+# Redirect .php URLs to clean URLs (GET requests only — preserves POST form data)
+RewriteCond %{THE_REQUEST} ^GET\s(/projet_fin/[^?\s]+)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=301,L,QSA]
+
+# Internally serve .php for clean URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L,QSA]
