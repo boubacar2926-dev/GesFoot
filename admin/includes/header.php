@@ -44,6 +44,9 @@ $baseUrl   = BASE_URL;
         <a href="<?= $baseUrl ?>/admin/club/index.php">
             <i class="bi bi-building"></i> Mon Club
         </a>
+        <a href="<?= $baseUrl ?>/admin/contacts/index.php">
+            <i class="bi bi-envelope-paper"></i> Demandes de contact
+        </a>
 
         <div class="sidebar-section">Gestion</div>
         <a href="<?= $baseUrl ?>/admin/users/index.php">
@@ -73,6 +76,9 @@ $baseUrl   = BASE_URL;
         <div class="sidebar-section">Analyse</div>
         <a href="<?= $baseUrl ?>/admin/classement/index.php">
             <i class="bi bi-award"></i> Classement
+        </a>
+        <a href="<?= $baseUrl ?>/admin/historique/index.php">
+            <i class="bi bi-clock-history"></i> Historique
         </a>
         <a href="<?= $baseUrl ?>/admin/rapports/index.php">
             <i class="bi bi-file-earmark-bar-graph"></i> Rapports

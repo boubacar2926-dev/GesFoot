@@ -13,8 +13,15 @@ csrfVerify();
 $pdo = getPDO();
 $id  = (int)($_POST['id'] ?? 0);
 
+// Vérification : propre compte
 if ($id === (int)(currentUser()['id'] ?? 0)) {
     setFlash('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+    redirect('/admin/users/index.php');
+}
+
+// Sécurité mode démo : Empêcher la suppression de l'admin principal
+if ($id === 1) {
+    setFlash('error', 'Action impossible : Le compte administrateur de démonstration ne peut pas être supprimé.');
     redirect('/admin/users/index.php');
 }
 

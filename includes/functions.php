@@ -193,3 +193,23 @@ function paginate(int $total, int $perPage, int $currentPage, string $url): stri
     }
     return $html . '</ul></nav>';
 }
+
+// ============================================================
+// HISTORIQUE MATCHS
+// ============================================================
+function logMatchHistory(PDO $pdo, int $matchId, string $matchLabel, string $action, ?array $changes = null): void {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS historique_matchs (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        match_id INT NOT NULL,
+        match_label VARCHAR(255) NOT NULL,
+        utilisateur_id INT NOT NULL,
+        action ENUM('creation','modification','suppression') NOT NULL,
+        details TEXT NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_match (match_id),
+        INDEX idx_date (created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $userId = currentUser()['id'] ?? 0;
+    $stmt = $pdo->prepare("INSERT INTO historique_matchs (match_id, match_label, utilisateur_id, action, details) VALUES (?,?,?,?,?)");
+    $stmt->execute([$matchId, $matchLabel, $userId, $action, $changes ? json_encode($changes, JSON_UNESCAPED_UNICODE) : null]);
+}

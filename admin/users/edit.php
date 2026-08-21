@@ -15,6 +15,12 @@ if (!$targetUser) { setFlash('error', 'Utilisateur introuvable.'); redirect('/ad
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrfVerify();
 
+    // Sécurité mode démo : Empêcher la modification de l'admin principal
+    if ($targetUser['email'] === 'admin@club.com' || $id === 1) {
+        setFlash('error', "Action impossible : Le compte administrateur de démonstration ne peut pas être modifié.");
+        redirect('/admin/users/index.php');
+    }
+
     $nom    = trim($_POST['nom']    ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
     $email  = trim($_POST['email']  ?? '');

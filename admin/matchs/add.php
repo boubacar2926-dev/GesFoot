@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ");
         $stmt->execute([$comp_id, $date_match, $heure_match ?: null, $stade ?: null,
             $adversaire, $lieu, $score_eq, $score_adv, $statut, $notes ?: null]);
+        $newId = (int)$pdo->lastInsertId();
+        logMatchHistory($pdo, $newId, 'vs ' . $adversaire . ' — ' . formatDate($date_match), 'creation');
         setFlash('success', "Match contre $adversaire enregistré.");
         redirect('/admin/matchs/index.php');
     }

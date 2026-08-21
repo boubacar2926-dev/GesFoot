@@ -1,10 +1,18 @@
-# Logs contenant des données sensibles (mots de passe temporaires)
-/logs/*.log
+# Fichiers de configuration sensibles
+config/database.php
 
-# Fichiers uploadés par les utilisateurs
-/assets/uploads/**
-!/assets/uploads/club/.gitkeep
+# Fichiers d'environnement
+.env
 
-# Fichiers système
-Thumbs.db
+# Images uploadées lors des tests
+uploads/photos/*
+!uploads/photos/.gitkeep
+
+# Fichiers système et éditeurs
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Fichiers temporaires PHP / Cache
+*.log

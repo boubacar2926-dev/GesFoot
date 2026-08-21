@@ -23,24 +23,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$date_match) $errors[] = "La date est requise.";
 
     if (!$errors) {
+        $newCompId   = (int)($_POST['competition_id'] ?? 0) ?: null;
+        $newHeure    = $_POST['heure_match'] ?: null;
+        $newStade    = trim($_POST['stade'] ?? '') ?: null;
+        $newLieu     = $_POST['domicile_exterieur'] ?? 'Domicile';
+        $newScoreEq  = (int)($_POST['score_equipe'] ?? 0);
+        $newScoreAdv = (int)($_POST['score_adverse'] ?? 0);
+        $newStatut   = $_POST['statut'] ?? 'Programmé';
+        $newNotes    = trim($_POST['notes'] ?? '') ?: null;
+
+        $compNames  = array_column($competitions, 'nom', 'id');
+        $diffFields = [
+            'Compétition'      => [$compNames[(int)($match['competition_id'] ?? 0)] ?? '—', $compNames[$newCompId ?? 0] ?? '—'],
+            'Date'             => [formatDate($match['date_match']),                          formatDate($date_match)],
+            'Heure'            => [substr($match['heure_match'] ?? '', 0, 5) ?: '—',         $newHeure ?: '—'],
+            'Stade'            => [$match['stade'] ?? '—',                                    $newStade ?? '—'],
+            'Adversaire'       => [$match['adversaire'] ?? '',                                $adversaire],
+            'Lieu'             => [$match['domicile_exterieur'] ?? '',                        $newLieu],
+            'Score équipe'     => [(string)($match['score_equipe'] ?? 0),                    (string)$newScoreEq],
+            'Score adversaire' => [(string)($match['score_adverse'] ?? 0),                   (string)$newScoreAdv],
+            'Statut'           => [$match['statut'] ?? '',                                    $newStatut],
+            'Notes'            => [$match['notes'] ?? '',                                     $newNotes ?? ''],
+        ];
+        $changes = [];
+        foreach ($diffFields as $label => [$avant, $apres]) {
+            if ($avant !== $apres) {
+                $changes[$label] = ['avant' => $avant, 'apres' => $apres];
+            }
+        }
+
         $stmt = $pdo->prepare("
             UPDATE matchs SET competition_id=?, date_match=?, heure_match=?, stade=?, adversaire=?,
                 domicile_exterieur=?, score_equipe=?, score_adverse=?, statut=?, notes=?
             WHERE id=?
         ");
         $stmt->execute([
-            (int)($_POST['competition_id'] ?? 0) ?: null,
-            $date_match,
-            $_POST['heure_match'] ?: null,
-            trim($_POST['stade'] ?? '') ?: null,
-            $adversaire,
-            $_POST['domicile_exterieur'] ?? 'Domicile',
-            (int)($_POST['score_equipe'] ?? 0),
-            (int)($_POST['score_adverse'] ?? 0),
-            $_POST['statut'] ?? 'Programmé',
-            trim($_POST['notes'] ?? '') ?: null,
+            $newCompId, $date_match, $newHeure, $newStade,
+            $adversaire, $newLieu, $newScoreEq, $newScoreAdv, $newStatut, $newNotes,
             $id
         ]);
+        if ($changes) {
+            logMatchHistory($pdo, $id, 'vs ' . $adversaire . ' — ' . formatDate($date_match), 'modification', $changes);
+        }
         setFlash('success', "Match mis à jour.");
         redirect('/admin/matchs/index.php');
     }

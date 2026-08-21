@@ -9,7 +9,9 @@ define('DB_USER',    'root');
 define('DB_PASS',    '');
 define('DB_CHARSET', 'utf8mb4');
 
-define('BASE_URL',  '/projet_fin');
+// ✅ Correction de BASE_URL pour le serveur PHP natif (php -S)
+define('BASE_URL',   'http://localhost:8000');
+
 defined('ROOT_PATH') || define('ROOT_PATH', realpath(__DIR__ . '/..'));
 define('UPLOAD_PATH', ROOT_PATH . '/assets/uploads');
 define('UPLOAD_URL',  BASE_URL  . '/assets/uploads');
