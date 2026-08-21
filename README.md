@@ -4,10 +4,10 @@ Une application web complète conçue en **PHP Native (Architecture MVC)** pour 
 
 ## 🚀 Fonctionnalités Principales
 
-- **Gestion des Utilisateurs & Rôles :** Admin, Coaches, Staff technique, Joueurs.
-- **Gestion des Joueurs :** Profils, statistiques, photos de profil.
-- **Gestion de la Démo :** Protection des comptes d'administration principaux contre l'édition/suppression.
-- **Espace Administrateur :** Tableaux de bord, modification des rôles et statuts.
+- **Espace Administrateur :** Gestion des utilisateurs, attribution des rôles et contrôle global.
+- **Espace Coach / Entraîneur :** Suivi des effectifs, gestion des compositions d'équipe et des entraînements.
+- **Gestion des Joueurs :** Profils individuels, photos et fiches techniques.
+- **Sécurité & Démo :** Protection CSRF, hachage des mots de passe et verrouillage des comptes de démonstration.
 
 ## 🛠️ Technologies Utilisées
 
