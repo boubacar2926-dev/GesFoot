@@ -13,5 +13,7 @@ if (ini_get('session.use_cookies')) {
     );
 }
 session_destroy();
-header('Location: ' . BASE_URL . '/auth/login.php');
+
+// Redirection directe vers le site vitrine
+header('Location: ' . BASE_URL . '/vitrine.php');
 exit;

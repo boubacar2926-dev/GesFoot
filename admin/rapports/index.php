@@ -5,7 +5,8 @@ require_once ROOT_PATH . '/includes/functions.php';
 requireRole('admin');
 $pdo = getPDO();
 
-$type = $_GET['type'] ?? 'joueurs';
+$allowedTypes = ['joueurs', 'matchs', 'statistiques', 'performances'];
+$type = in_array($_GET['type'] ?? '', $allowedTypes, true) ? $_GET['type'] : 'joueurs';
 
 // Données selon le type de rapport
 $data = [];

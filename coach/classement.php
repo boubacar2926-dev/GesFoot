@@ -12,7 +12,6 @@ $classement = [];
 $equipeNom  = $pdo->query("SELECT nom FROM clubs LIMIT 1")->fetchColumn() ?: 'Notre équipe';
 
 if ($compId) {
-    $matchs = $pdo->prepare("SELECT * FROM matchs WHERE competition_id=? AND statut='Terminé'")->execute([$compId]);
     $matchs = $pdo->prepare("SELECT * FROM matchs WHERE competition_id=? AND statut='Terminé'");
     $matchs->execute([$compId]);
     $matchs = $matchs->fetchAll();

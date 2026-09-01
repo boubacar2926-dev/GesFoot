@@ -13,9 +13,13 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS demandes_contact (
     nom_contact VARCHAR(255) NOT NULL,
     email       VARCHAR(255) NOT NULL,
     telephone   VARCHAR(50)  NULL,
+    offre       VARCHAR(100) NULL,
     message     TEXT         NULL,
     created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+if (!$pdo->query("SHOW COLUMNS FROM demandes_contact LIKE 'offre'")->fetchColumn()) {
+    $pdo->exec("ALTER TABLE demandes_contact ADD COLUMN offre VARCHAR(100) NULL AFTER telephone");
+}
 
 $perPage  = 20;
 $page     = max(1, (int)($_GET['page'] ?? 1));
@@ -51,6 +55,7 @@ require_once ROOT_PATH . '/admin/includes/header.php';
                 <th>Contact</th>
                 <th>Email</th>
                 <th>Téléphone</th>
+                <th>Offre</th>
                 <th>Message</th>
             </tr></thead>
             <tbody>
@@ -68,6 +73,7 @@ require_once ROOT_PATH . '/admin/includes/header.php';
                     </a>
                 </td>
                 <td class="text-muted small"><?= $d['telephone'] ? e($d['telephone']) : '—' ?></td>
+                <td class="text-muted small"><?= !empty($d['offre']) ? e($d['offre']) : '—' ?></td>
                 <td class="small" style="max-width:260px">
                     <?php if ($d['message']): ?>
                         <span title="<?= e($d['message']) ?>">

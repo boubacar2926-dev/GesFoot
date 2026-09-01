@@ -9,8 +9,8 @@ define('DB_USER',    'root');
 define('DB_PASS',    '');
 define('DB_CHARSET', 'utf8mb4');
 
-// ✅ Correction de BASE_URL pour le serveur PHP natif (php -S)
-define('BASE_URL',   'http://localhost:8000');
+// ✅ BASE_URL configurée pour XAMPP (Port 80)
+define('BASE_URL',   'http://localhost/GesFoot');
 
 defined('ROOT_PATH') || define('ROOT_PATH', realpath(__DIR__ . '/..'));
 define('UPLOAD_PATH', ROOT_PATH . '/assets/uploads');
