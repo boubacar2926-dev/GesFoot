@@ -73,39 +73,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    
-    <style>
-        :root {
-            --brand-green: #166534;
-            --brand-green-hover: #15803d;
-            --brand-gold: #eab308;
-            --dark-bg: #0f1923;
-            --body-bg: #f8fafc;
-        }
+    <link href="<?= BASE_URL ?>/assets/css/style.css?v=<?= assetVersion('assets/css/style.css') ?>" rel="stylesheet">
 
+    <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #fff;
-            color: #334155;
+            background-color: var(--paper);
+            color: var(--text-muted);
         }
 
-        html { 
-            scroll-behavior: smooth; 
-            scroll-padding-top: 80px; 
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
         }
 
         section[id] {
             scroll-margin-top: 80px;
         }
 
-        /* Navbar */
-        .lp-navbar { 
-            background: rgba(15, 25, 35, 0.95) !important; 
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,.08); 
+        /* Navbar — surface pleine, pas de flou "verre" */
+        .lp-navbar {
+            background: var(--ink) !important;
+            border-bottom: 1px solid rgba(255,255,255,.08);
         }
         .nav-link {
-            color: rgba(255,255,255,.75) !important;
+            color: rgba(255,255,255,.72) !important;
             font-size: 0.9rem;
             font-weight: 500;
             transition: color .2s;
@@ -115,109 +107,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
         /* Hero */
         .lp-hero {
             position: relative;
-            background-color: var(--dark-bg);
-            background-image: linear-gradient(160deg, rgba(15, 25, 35, 0.94) 0%, rgba(22, 101, 52, 0.88) 100%);
-            background-position: center center;
+            background-color: var(--ink);
+            background-image:
+                linear-gradient(180deg, rgba(20,38,33,.88) 0%, rgba(20,38,33,.94) 60%, var(--ink) 100%),
+                url('https://live.staticflickr.com/8331/8138744735_44c3cc96f0_b.jpg');
+            background-position: center 30%;
             background-size: cover;
             background-repeat: no-repeat;
-            padding: 90px 0 110px;
+            padding: 100px 0 90px;
         }
 
         .lp-label {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(234, 179, 8, 0.15);
-            border: 1px solid rgba(234, 179, 8, 0.35);
-            color: #fde047;
-            font-size: .78rem;
+            background: rgba(182, 130, 47, .16);
+            border: 1px solid rgba(182, 130, 47, .4);
+            color: var(--gold-soft);
+            font-size: .76rem;
             font-weight: 700;
-            letter-spacing: .05em;
+            letter-spacing: .07em;
             text-transform: uppercase;
             padding: 6px 14px;
-            border-radius: 30px;
-            margin-bottom: 18px;
+            border-radius: 3px;
+            margin-bottom: 20px;
         }
 
-        /* Dashboard Preview Mockup */
-        .app-window {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,.5);
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,.2);
-        }
-        .app-window-header {
-            background: #f1f5f9;
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-        .dot-red { background: #ef4444; }
-        .dot-yellow { background: #f59e0b; }
-        .dot-green { background: #10b981; }
-
-        /* Stats bar */
+        /* Bande de chiffres — flotte sur le bas du hero photo */
         .stats-bar {
-            background: #fff;
-            border-bottom: 1px solid #e2e8f0;
-            margin-top: -40px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            margin-top: -48px;
             position: relative;
             z-index: 10;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.05);
+            box-shadow: 0 20px 45px rgba(0,0,0,.12);
         }
 
-        /* Feature Cards */
+        /* Cartes de fonctionnalités — retour visuel sobre au survol,
+           pas de "décollage" vertical */
         .lp-feat-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
             padding: 28px 24px;
             height: 100%;
-            background: #fff;
-            transition: all .25s ease;
+            background: var(--paper);
+            transition: border-color .2s, box-shadow .2s;
         }
-        .lp-feat-card:hover { 
-            box-shadow: 0 12px 24px rgba(0,0,0,.06); 
-            transform: translateY(-3px);
-            border-color: #cbd5e1;
+        .lp-feat-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #d7d2c2;
         }
         .lp-feat-icon {
-            width: 50px; height: 50px; border-radius: 10px;
+            width: 48px; height: 48px; border-radius: var(--r-sm);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem; margin-bottom: 18px;
+            font-size: 1.25rem; margin-bottom: 18px;
         }
 
-        /* Pricing Cards */
+        /* Cartes tarifs */
         .pricing-card {
-            background: #fff;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
             padding: 32px 24px;
             position: relative;
-            transition: all .3s ease;
+            transition: border-color .2s, box-shadow .2s;
             height: 100%;
             display: flex;
             flex-direction: column;
         }
         .pricing-card.popular {
-            border-color: var(--brand-green);
-            box-shadow: 0 20px 40px rgba(22, 101, 52, 0.12);
+            border-color: var(--pitch);
+            box-shadow: 0 20px 40px rgba(31, 99, 73, .12);
         }
         .popular-badge {
             position: absolute;
-            top: -14px;
+            top: -13px;
             right: 24px;
-            background: var(--brand-green);
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 700;
+            background: var(--gold);
+            color: var(--ink);
+            font-size: 0.72rem;
+            font-weight: 800;
             padding: 4px 14px;
-            border-radius: 20px;
+            border-radius: 3px;
             text-transform: uppercase;
+            letter-spacing: .04em;
         }
     </style>
 </head>
@@ -227,12 +201,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
 <nav class="navbar navbar-expand-lg lp-navbar sticky-top py-3">
     <div class="container">
         <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2 text-decoration-none" href="#top">
-            <div style="width:34px;height:34px;background:var(--brand-green);border-radius:8px;display:flex;align-items:center;justify-content:center">
-                <i class="bi bi-trophy-fill text-white" style="font-size:.9rem"></i>
+            <div style="width:34px;height:34px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center">
+                <i class="bi bi-trophy-fill" style="font-size:.9rem;color:var(--ink)"></i>
             </div>
             <span>ClubManager</span>
         </a>
-        
+
         <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
             <i class="bi bi-list fs-2"></i>
         </button>
@@ -247,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
                 <a href="<?= BASE_URL ?>/auth/login.php" class="btn btn-sm btn-outline-light px-3 py-2 fw-semibold">
                     Connexion Club
                 </a>
-                <a href="#commande" class="btn btn-sm fw-semibold text-white px-3 py-2" style="background:var(--brand-green)">
+                <a href="#commande" class="btn btn-sm fw-bold px-3 py-2" style="background:var(--gold);color:var(--ink)">
                     Obtenir ClubManager
                 </a>
             </div>
@@ -258,61 +232,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
 <!-- HERO -->
 <section class="lp-hero">
     <div class="container">
-        <div class="row align-items-center gy-5">
-            <div class="col-lg-6">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
                 <div class="lp-label"><i class="bi bi-rocket-takeoff-fill"></i> Solution clé en main pour clubs & académies</div>
                 <h1 class="display-5 fw-extrabold text-white lh-sm mb-3">
-                    Modernisez et digitalisez la gestion de votre <span style="color:var(--brand-gold)">club de football</span>
+                    Modernisez et digitalisez la gestion de votre <span style="color:var(--gold)">club de football</span>
                 </h1>
-                <p class="mb-4" style="font-size:1.1rem;color:rgba(255,255,255,.85);line-height:1.7">
+                <p class="mb-4 mx-auto" style="max-width:640px;font-size:1.1rem;color:rgba(255,255,255,.85);line-height:1.7">
                     Gagnez du temps dans la gestion de vos effectifs, la diffusion des convocations de matchs, le suivi des présences et l'analyse des statistiques de vos joueurs.
                 </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="#commande" class="btn btn-lg px-4 fw-bold" style="background:var(--brand-gold);color:#0f1923;border-radius:8px">
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="#commande" class="btn btn-lg px-4 fw-bold" style="background:var(--gold);color:var(--ink);border-radius:6px">
                         <i class="bi bi-cart-check me-2"></i>Commander mon logiciel
                     </a>
-                    <a href="<?= BASE_URL ?>/auth/login.php" class="btn btn-lg btn-outline-light px-4" style="border-radius:8px">
+                    <a href="<?= BASE_URL ?>/auth/login.php" class="btn btn-lg btn-outline-light px-4" style="border-radius:6px">
                         <i class="bi bi-eye me-2"></i>Accès Démo
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
 
-            <!-- Preview Dashboard -->
-            <div class="col-lg-6">
-                <div class="app-window">
-                    <div class="app-window-header">
-                        <span class="dot dot-red"></span>
-                        <span class="dot dot-yellow"></span>
-                        <span class="dot dot-green"></span>
-                        <span class="ms-2 text-muted small fw-medium">ClubManager Pro — Aperçu de l'application</span>
-                    </div>
-                    <div class="p-4 bg-light">
-                        <div class="row g-3 mb-3">
-                            <div class="col-6">
-                                <div class="p-3 bg-white border rounded">
-                                    <div class="text-muted small">Effectif Total</div>
-                                    <div class="fw-bold fs-4 text-dark mt-1">28 Joueurs</div>
-                                    <div class="badge bg-success-subtle text-success mt-1">Saison 2025/2026</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-3 bg-white border rounded">
-                                    <div class="text-muted small">Prochain Match</div>
-                                    <div class="fw-bold text-dark mt-1">ASC Étoile vs FootPulse</div>
-                                    <div class="text-success small fw-semibold mt-1"><i class="bi bi-clock me-1"></i>Samedi à 16:00</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-3 bg-white border rounded">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold text-dark small"><i class="bi bi-send-check text-success me-1"></i> Convocations envoyées</span>
-                                <span class="badge bg-success">18 Convoqués</span>
-                            </div>
-                            <div class="progress" style="height:8px">
-                                <div class="progress-bar bg-success" style="width:100%"></div>
-                            </div>
-                        </div>
-                    </div>
+<!-- BANDE DE CHIFFRES -->
+<div class="container">
+    <div class="stats-bar px-4 py-4">
+        <div class="row text-center g-4">
+            <div class="col-6 col-md-3">
+                <div class="fw-extrabold fs-3 text-success">20+</div>
+                <div class="text-muted small">Joueurs suivis</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fw-extrabold fs-3 text-success">18–22</div>
+                <div class="text-muted small">Joueurs convoqués / match</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fw-extrabold fs-3 text-success">4</div>
+                <div class="text-muted small">Espaces dédiés (admin, coach, staff, joueur)</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fw-extrabold fs-3 text-success">100%</div>
+                <div class="text-muted small">Hébergé et sécurisé pour votre club</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FONCTIONNALITÉS -->
+<section id="fonctionnalites" class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-success small">Tout, au même endroit</span>
+            <h2 class="fw-bold mt-1">Ce que ClubManager gère pour vous</h2>
+            <p class="text-muted">Les six écrans que votre staff utilisera chaque semaine, du recrutement au jour de match.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="lp-feat-card">
+                    <div class="lp-feat-icon bg-success-subtle text-success"><i class="bi bi-person-badge"></i></div>
+                    <h5 class="fw-bold mb-2">Effectif & fiches joueurs</h5>
+                    <p class="text-muted small mb-0">Profils complets — poste, âge, gabarit, photo, statut — classés et retrouvables en un clic.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="lp-feat-card">
+                    <div class="lp-feat-icon bg-warning-subtle text-warning"><i class="bi bi-clipboard2-check"></i></div>
+                    <h5 class="fw-bold mb-2">Convocations encadrées</h5>
+                    <p class="text-muted small mb-0">Entre 18 et 22 joueurs par match, lieu et heure de rendez-vous, notification automatique à ceux qui ne sont pas retenus.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="lp-feat-card">
+                    <div class="lp-feat-icon bg-success-subtle text-success"><i class="bi bi-layout-text-sidebar"></i></div>
+                    <h5 class="fw-bold mb-2">Compositions d'équipe</h5>
+                    <p class="text-muted small mb-0">Titulaires et remplaçants choisis uniquement parmi les joueurs convoqués — impossible d'aligner quelqu'un par erreur.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="lp-feat-card">
+                    <div class="lp-feat-icon bg-warning-subtle text-warning"><i class="bi bi-bar-chart-line"></i></div>
+                    <h5 class="fw-bold mb-2">Statistiques par match</h5>
+                    <p class="text-muted small mb-0">Buts, passes décisives, cartons, minutes jouées et note — cumulés automatiquement sur la saison.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="lp-feat-card">
+                    <div class="lp-feat-icon bg-success-subtle text-success"><i class="bi bi-award"></i></div>
+                    <h5 class="fw-bold mb-2">Classement & compétitions</h5>
+                    <p class="text-muted small mb-0">Suivi des résultats par compétition avec classement calculé match après match.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="lp-feat-card">
+                    <div class="lp-feat-icon bg-warning-subtle text-warning"><i class="bi bi-file-earmark-bar-graph"></i></div>
+                    <h5 class="fw-bold mb-2">Rapports exportables</h5>
+                    <p class="text-muted small mb-0">Rapports joueurs, matchs et performances générés en PDF, prêts à partager avec le bureau du club.</p>
                 </div>
             </div>
         </div>
@@ -365,7 +380,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
                         <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Nom de domaine propre (ex: club.com)</li>
                         <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Assistance prioritaires aux entraîneurs</li>
                     </ul>
-                    <a href="#commande" onclick="selectOffre('Licence Annuelle (150 000 FCFA/an)')" class="btn btn-success w-100 py-2 fw-semibold" style="background:var(--brand-green)">Commander maintenant</a>
+                    <a href="#commande" onclick="selectOffre('Licence Annuelle (150 000 FCFA/an)')" class="btn btn-success w-100 py-2 fw-semibold">Commander maintenant</a>
                 </div>
             </div>
 
@@ -456,7 +471,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
                                 <textarea name="message" class="form-control" rows="3" placeholder="Précisez le nombre d'équipes, de joueurs ou vos questions..."><?= e($saved['message'] ?? '') ?></textarea>
                             </div>
                             <div class="col-12 mt-3">
-                                <button type="submit" class="btn btn-success w-100 py-3 fw-bold" style="background:var(--brand-green)">
+                                <button type="submit" class="btn btn-success w-100 py-3 fw-bold">
                                     <i class="bi bi-send-check me-2"></i> Envoyer ma demande
                                 </button>
                             </div>
@@ -470,11 +485,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
 </section>
 
 <!-- FOOTER -->
-<footer class="py-4 text-white" style="background:var(--dark-bg);border-top:1px solid rgba(255,255,255,.08)">
+<footer class="py-4 text-white" style="background:var(--ink);border-top:1px solid rgba(255,255,255,.08)">
     <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div class="d-flex align-items-center gap-2">
-            <div style="width:28px;height:28px;background:var(--brand-green);border-radius:6px;display:flex;align-items:center;justify-content:center">
-                <i class="bi bi-trophy-fill text-white" style="font-size:.75rem"></i>
+            <div style="width:28px;height:28px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center">
+                <i class="bi bi-trophy-fill" style="font-size:.75rem;color:var(--ink)"></i>
             </div>
             <span class="fw-bold small">ClubManager Pro</span>
             <span class="text-muted small">· Solution de gestion sportive commercialisée</span>
@@ -484,6 +499,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
             <a href="#commande" class="text-muted small text-decoration-none">Contact</a>
             <a href="<?= BASE_URL ?>/auth/login.php" class="text-muted small text-decoration-none">Connexion</a>
         </div>
+    </div>
+    <div class="container mt-3">
+        <p class="text-muted mb-0" style="font-size:.68rem;opacity:.55">
+            Photo d'illustration : « El Jaish football team » par Doha Stadium Plus Qatar (Vinod Divakaran), licence
+            <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener" class="text-muted">CC BY 2.0</a> —
+            <a href="https://www.flickr.com/photos/dohastadiumplusqatar/8138744735/" target="_blank" rel="noopener" class="text-muted">source</a>.
+            À remplacer par une photo de votre propre club.
+        </p>
     </div>
 </footer>
 

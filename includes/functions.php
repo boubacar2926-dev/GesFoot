@@ -111,6 +111,13 @@ function e(string $str): string {
     return htmlspecialchars($str, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+// Cache-buster basé sur la date de dernière modification du fichier :
+// évite qu'un navigateur serve une ancienne version du CSS après une mise à jour.
+function assetVersion(string $relativePath): string {
+    $path = ROOT_PATH . '/' . ltrim($relativePath, '/');
+    return (string)(file_exists($path) ? filemtime($path) : time());
+}
+
 function formatDate(?string $date): string {
     if (!$date) return '—';
     return date('d/m/Y', strtotime($date));

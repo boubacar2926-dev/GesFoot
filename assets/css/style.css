@@ -1,23 +1,105 @@
 /* ============================================================
-   Football Club Platform — Custom Styles
+   ClubManager — Design system
+   Palette "terrain / écusson" : vert profond + laiton, plutôt que
+   le vert-succès et l'ambre par défaut de Bootstrap.
    ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 :root {
-    --fc-green:      #2d6a4f;
-    --fc-green-dark: #1b4332;
-    --fc-green-light:#52b788;
-    --fc-gold:       #f4a261;
-    --sidebar-bg:    #0f1923;
+    /* Surfaces */
+    --ink:        #142621;   /* fond sombre (sidebar, navbar, hero) */
+    --ink-2:      #1c352c;   /* panneau secondaire sur fond sombre */
+    --canvas:     #f6f5f0;   /* fond de page, blanc cassé chaud */
+    --paper:      #ffffff;
+
+    /* Marque */
+    --pitch:        #1f6349; /* vert principal */
+    --pitch-strong:  #164a37; /* survol / actif */
+    --pitch-rgb:     31,99,73;
+    --gold:          #b6822f; /* laiton — accent unique, remplace les 2 "or" divergents */
+    --gold-rgb:      182,130,47;
+    --gold-soft:     #ecdfc2;
+
+    /* Texte */
+    --text:        #1f2a26;
+    --text-muted:  #6b7570;
+    --line:        #e6e2d8;  /* filet chaud, remplace le gris-bleu Bootstrap */
+
+    /* Rayons / ombres — échelle resserrée, ombres teintées (pas de noir pur) */
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --shadow-sm: 0 1px 2px rgba(20,38,33,.06);
+    --shadow-md: 0 6px 20px rgba(20,38,33,.08);
+
+    --sidebar-bg:    var(--ink);
     --sidebar-width: 260px;
     --topbar-h:      62px;
+
+    /* Rétablit la palette "success" de Bootstrap sur la couleur de marque :
+       tous les bg-success / text-success / badges / alertes en héritent. */
+    --bs-success:            var(--pitch);
+    --bs-success-rgb:        var(--pitch-rgb);
+    --bs-success-bg-subtle:  #e2ede7;
+    --bs-success-border-subtle: #bcd8ca;
+    --bs-success-text-emphasis: var(--pitch-strong);
+
+    --bs-warning:            var(--gold);
+    --bs-warning-rgb:        var(--gold-rgb);
+    --bs-warning-bg-subtle:  var(--gold-soft);
+    --bs-warning-border-subtle: #d9c496;
+    --bs-warning-text-emphasis: #7a5a1f;
+
+    --bs-body-font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --bs-border-radius: var(--r-md);
+    --bs-border-radius-sm: var(--r-sm);
+    --bs-border-radius-lg: var(--r-lg);
+}
+
+/* Anciens noms conservés pour compat (fonctions PHP existantes n'y touchent pas,
+   mais tout autre CSS legacy continue de résoudre vers les nouveaux tokens). */
+:root {
+    --fc-green: var(--pitch);
+    --fc-green-dark: var(--ink);
+    --fc-green-light: #4f9376;
+    --fc-gold: var(--gold);
 }
 
 /* ---- Base ---- */
+* { -webkit-font-smoothing: antialiased; }
 body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #f8fafc;
-    color: #1e293b;
+    font-family: var(--bs-body-font-family);
+    background: var(--canvas);
+    color: var(--text);
 }
+h1, h2, h3, h4, h5, h6 { letter-spacing: -.01em; }
+.text-tabular { font-variant-numeric: tabular-nums; }
+
+/* Retint des boutons Bootstrap "success" -> vert de marque */
+.btn-success {
+    --bs-btn-bg: var(--pitch);
+    --bs-btn-border-color: var(--pitch);
+    --bs-btn-hover-bg: var(--pitch-strong);
+    --bs-btn-hover-border-color: var(--pitch-strong);
+    --bs-btn-active-bg: var(--pitch-strong);
+    --bs-btn-active-border-color: var(--pitch-strong);
+    --bs-btn-disabled-bg: var(--pitch);
+    --bs-btn-disabled-border-color: var(--pitch);
+    --bs-btn-focus-shadow-rgb: var(--pitch-rgb);
+}
+.btn-outline-success {
+    --bs-btn-color: var(--pitch);
+    --bs-btn-border-color: var(--pitch);
+    --bs-btn-hover-bg: var(--pitch);
+    --bs-btn-hover-border-color: var(--pitch);
+    --bs-btn-active-bg: var(--pitch);
+    --bs-btn-active-border-color: var(--pitch);
+    --bs-btn-focus-shadow-rgb: var(--pitch-rgb);
+}
+.btn { border-radius: var(--r-sm); font-weight: 600; }
+.text-success   { color: var(--pitch) !important; }
+.border-success { border-color: var(--pitch) !important; }
 
 /* ---- Sidebar ---- */
 .sidebar {
@@ -39,47 +121,55 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: var(--fc-green-dark);
+    background: var(--ink-2);
     border-bottom: 1px solid rgba(255,255,255,.08);
     text-decoration: none;
     flex-shrink: 0;
 }
 .sidebar-brand .brand-icon {
-    width: 40px; height: 40px;
-    background: var(--fc-green);
-    border-radius: 8px;
+    width: 38px; height: 38px;
+    background: var(--gold);
+    border-radius: var(--r-sm);
     display: flex; align-items: center; justify-content: center;
-    color: #fff;
-    font-size: 1.3rem;
+    color: var(--ink);
+    font-size: 1.15rem;
     flex-shrink: 0;
 }
 .sidebar-brand .brand-text { color: #fff; font-weight: 700; font-size: 1rem; line-height: 1.2; }
 .sidebar-brand .brand-sub  { color: rgba(255,255,255,.5); font-size: .7rem; }
 
 .sidebar-section {
-    padding: 16px 12px 4px;
-    color: rgba(255,255,255,.35);
-    font-size: .65rem;
+    padding: 18px 20px 6px;
+    color: rgba(255,255,255,.32);
+    font-size: .64rem;
     font-weight: 700;
-    letter-spacing: .08em;
+    letter-spacing: .1em;
     text-transform: uppercase;
 }
 
+/* Item de nav : accent en filet à gauche plutôt qu'une pastille pleine —
+   lecture plus posée, moins "template SaaS". */
 .sidebar nav a {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 16px;
-    margin: 2px 8px;
-    border-radius: 6px;
-    color: rgba(255,255,255,.65);
+    padding: 9px 20px 9px 17px;
+    margin: 1px 0;
+    border-left: 3px solid transparent;
+    color: rgba(255,255,255,.62);
     text-decoration: none;
-    font-size: .88rem;
-    transition: background .15s, color .15s;
+    font-size: .87rem;
+    transition: background .15s, color .15s, border-color .15s;
 }
-.sidebar nav a i { font-size: 1.05rem; flex-shrink: 0; width: 20px; text-align: center; }
-.sidebar nav a:hover { background: rgba(255,255,255,.07); color: #fff; }
-.sidebar nav a.active { background: var(--fc-green); color: #fff; font-weight: 600; }
+.sidebar nav a i { font-size: 1.02rem; flex-shrink: 0; width: 20px; text-align: center; }
+.sidebar nav a:hover { background: rgba(255,255,255,.05); color: #fff; }
+.sidebar nav a.active {
+    background: rgba(182,130,47,.12);
+    border-left-color: var(--gold);
+    color: #fff;
+    font-weight: 600;
+}
 .sidebar nav a .badge { margin-left: auto; }
 
 /* ---- Main layout ---- */
@@ -93,8 +183,8 @@ body {
 /* ---- Topbar ---- */
 .topbar {
     height: var(--topbar-h);
-    background: #fff;
-    border-bottom: 1px solid #e2e8f0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
     padding: 0 24px;
@@ -103,12 +193,12 @@ body {
     z-index: 1030;
     gap: 12px;
 }
-.topbar .page-title { font-weight: 600; font-size: 1rem; color: #1e293b; }
+.topbar .page-title { font-weight: 700; font-size: 1rem; color: var(--text); }
 .topbar .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 .topbar .user-chip {
     display: flex; align-items: center; gap: 8px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--canvas);
+    border: 1px solid var(--line);
     border-radius: 30px;
     padding: 4px 14px 4px 4px;
     font-size: .85rem; cursor: pointer;
@@ -120,38 +210,36 @@ body {
 
 /* ---- Stats Cards ---- */
 .stat-card {
-    border: 1px solid #f1f5f9;
-    border-radius: 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
     padding: 18px 20px;
     display: flex;
     align-items: center;
     gap: 14px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.04);
-    transition: box-shadow .15s;
-    background: #fff;
+    box-shadow: var(--shadow-sm);
+    background: var(--paper);
 }
-.stat-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.07); }
 .stat-card .stat-icon {
-    width: 44px; height: 44px; border-radius: 8px;
+    width: 44px; height: 44px; border-radius: var(--r-sm);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     flex-shrink: 0;
 }
-.stat-card .stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
-.stat-card .stat-label { color: #64748b; font-size: .82rem; margin-top: 3px; }
+.stat-card .stat-value { font-size: 1.6rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat-card .stat-label { color: var(--text-muted); font-size: .82rem; margin-top: 3px; }
 
 /* ---- Cards ---- */
 .card {
-    border: 1px solid #f1f5f9;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-sm);
 }
 .card-header {
-    background: #fff;
-    border-bottom: 1px solid #f1f5f9;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
     padding: 14px 20px;
-    border-radius: 8px 8px 0 0 !important;
-    font-weight: 600;
+    border-radius: var(--r-md) var(--r-md) 0 0 !important;
+    font-weight: 700;
     font-size: .9rem;
 }
 .card-body { padding: 20px; }
@@ -159,75 +247,86 @@ body {
 /* ---- Table ---- */
 .table-card .table { margin: 0; }
 .table thead th {
-    background: #f1f5f9;
-    font-size: .75rem;
+    background: var(--canvas);
+    font-size: .72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .04em;
-    color: #64748b;
-    border-bottom: 1px solid #e2e8f0;
+    letter-spacing: .05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--line);
     padding: 10px 14px;
     white-space: nowrap;
 }
-.table tbody td { padding: 12px 14px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
-.table tbody tr:hover { background: #fafbfc; }
+.table tbody td { padding: 12px 14px; vertical-align: middle; border-bottom: 1px solid var(--line); }
+.table tbody tr:hover { background: rgba(20,38,33,.02); }
 .table tbody tr:last-child td { border-bottom: none; }
+.table-success > * { --bs-table-bg: #e2ede7 !important; }
 
 /* ---- Avatar ---- */
-.avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
+.avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
 .avatar-sm { width: 28px; height: 28px; }
 .avatar-lg { width: 56px; height: 56px; }
 
 /* ---- Buttons ---- */
 .btn-sm { padding: 4px 10px; font-size: .8rem; }
-.btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; }
+.btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm); }
 
 /* ---- Forms ---- */
-.form-label { font-weight: 600; font-size: .85rem; color: #374151; }
+.form-label { font-weight: 600; font-size: .85rem; color: #374b43; }
 .form-control, .form-select {
-    border-radius: 6px;
-    border-color: #e2e8f0;
+    border-radius: var(--r-sm);
+    border-color: var(--line);
     font-size: .9rem;
 }
 .form-control:focus, .form-select:focus {
-    border-color: var(--fc-green);
-    box-shadow: 0 0 0 3px rgba(45,106,79,.12);
+    border-color: var(--pitch);
+    box-shadow: 0 0 0 3px rgba(31,99,73,.12);
 }
 
 /* ---- Badges ---- */
-.badge { font-size: .72rem; font-weight: 600; padding: 3px 7px; border-radius: 4px; }
+.badge { font-size: .71rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: .01em; }
 
 /* ---- Player card ---- */
 .player-card {
-    border-radius: 8px;
+    border-radius: var(--r-md);
     overflow: hidden;
-    transition: box-shadow .15s;
-    border: 1px solid #e2e8f0;
-    background: #fff;
+    transition: box-shadow .15s, border-color .15s;
+    border: 1px solid var(--line);
+    background: var(--paper);
 }
-.player-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.player-card:hover { box-shadow: var(--shadow-md); border-color: #d7d2c2; }
 .player-card .player-header {
-    background: var(--fc-green-dark);
+    background: var(--ink);
     padding: 20px;
     text-align: center;
     color: #fff;
 }
-.player-card .player-header img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.3); }
-.player-card .player-num { background: rgba(255,255,255,.15); border-radius: 4px; padding: 2px 8px; font-size: .8rem; display: inline-block; margin-top: 4px; }
+.player-card .player-header img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.25); }
+.player-card .player-num { background: rgba(182,130,47,.28); color: #f4e6c8; border-radius: 4px; padding: 2px 8px; font-size: .8rem; display: inline-block; margin-top: 4px; }
 
 /* ---- Score display ---- */
-.score-display { font-size: 2rem; font-weight: 800; letter-spacing: .05em; }
-.score-vs { font-size: .8rem; color: #64748b; text-transform: uppercase; }
+.score-display { font-size: 2rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.score-vs { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
 
 /* ---- Login page ---- */
-.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, #1b4332 0%, #142e23 100%); padding: 1rem; }
-.login-card { max-width: 420px; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
-.login-header { background: rgba(255,255,255,.06); backdrop-filter: blur(10px); padding: 32px; text-align: center; color: #fff; border-bottom: 1px solid rgba(255,255,255,.08); }
-.login-body { background: #fff; padding: 32px; }
+.login-page {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--ink);
+    background-image:
+        linear-gradient(160deg, var(--ink) 0%, #0d1815 100%);
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+/* filet de touche dorée en haut de fenêtre, plutôt qu'un dégradé décoratif */
+.login-page::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+}
+.login-card { max-width: 420px; width: 100%; border-radius: var(--r-lg); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+.login-header { background: var(--ink-2); padding: 34px 32px; text-align: center; color: #fff; border-bottom: 1px solid rgba(255,255,255,.08); }
+.login-body { background: var(--paper); padding: 32px; }
 
 /* ---- Responsive ---- */
 @media (max-width: 991.98px) {
@@ -244,7 +343,7 @@ body {
 .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 4px; }
 
 /* ---- Misc ---- */
-.text-green { color: var(--fc-green) !important; }
-.bg-green   { background-color: var(--fc-green) !important; }
-.divider { border-top: 1px solid #f1f5f9; margin: 16px 0; }
-.section-title { font-weight: 600; font-size: .95rem; color: #1e293b; margin-bottom: 16px; }
+.text-green { color: var(--pitch) !important; }
+.bg-green   { background-color: var(--pitch) !important; }
+.divider { border-top: 1px solid var(--line); margin: 16px 0; }
+.section-title { font-weight: 700; font-size: .95rem; color: var(--text); margin-bottom: 16px; }

@@ -17,7 +17,7 @@ $baseUrl   = BASE_URL;
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="<?= $baseUrl ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?= $baseUrl ?>/assets/css/style.css?v=<?= assetVersion('assets/css/style.css') ?>" rel="stylesheet">
 
     <?= $extraHead ?? '' ?>
 </head>
