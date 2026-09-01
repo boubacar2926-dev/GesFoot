@@ -19,15 +19,45 @@ if ($matchId) {
     $composition = $stmt->fetchAll();
 }
 
-$joueursDispos = [];
+$convoquesIds = [];
 if ($matchId) {
-    $joueursDispos = $pdo->query("SELECT * FROM joueurs WHERE statut='actif' ORDER BY poste, nom")->fetchAll();
+    $stmt = $pdo->prepare("
+        SELECT DISTINCT cj.joueur_id
+        FROM convocation_joueur cj
+        JOIN convocations cv ON cv.id = cj.convocation_id
+        WHERE cv.match_id = ?
+    ");
+    $stmt->execute([$matchId]);
+    $convoquesIds = array_column($stmt->fetchAll(), 'joueur_id');
+}
+
+$joueursDispos = [];
+if ($matchId && $convoquesIds) {
+    $in = implode(',', array_fill(0, count($convoquesIds), '?'));
+    $stmt = $pdo->prepare("SELECT * FROM joueurs WHERE statut='actif' AND id IN ($in) ORDER BY poste, nom");
+    $stmt->execute($convoquesIds);
+    $joueursDispos = $stmt->fetchAll();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrfVerify();
     $mid = (int)($_POST['match_id'] ?? 0);
     if ($mid <= 0) { setFlash('error', 'Match invalide.'); redirect('/coach/compositions/index.php'); }
+
+    $stmtConv = $pdo->prepare("
+        SELECT DISTINCT cj.joueur_id
+        FROM convocation_joueur cj
+        JOIN convocations cv ON cv.id = cj.convocation_id
+        WHERE cv.match_id = ?
+    ");
+    $stmtConv->execute([$mid]);
+    $convoquesMid = array_column($stmtConv->fetchAll(), 'joueur_id');
+
+    if (!$convoquesMid) {
+        setFlash('error', 'Impossible de composer l\'équipe : aucune convocation n\'existe pour ce match. Créez-la d\'abord.');
+        redirect('/coach/compositions/index.php?match_id=' . $mid);
+    }
+
     $validTypes = ['Titulaire', 'Remplaçant'];
     try {
         $pdo->beginTransaction();
@@ -36,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($_POST['joueurs'] ?? [] as $jid => $data) {
             $type = $data['type'] ?? '';
             if (!in_array($type, $validTypes)) continue;
+            if (!in_array((int)$jid, $convoquesMid, true)) continue; // joueur non convoqué : ignoré
             $ins->execute([$mid, (int)$jid, $type, $data['poste'] ?: null]);
         }
         $pdo->commit();
@@ -151,7 +182,10 @@ require_once ROOT_PATH . '/coach/includes/header.php';
 </script>
 
 <?php elseif ($matchId): ?>
-    <div class="alert alert-info">Aucun joueur actif disponible.</div>
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Aucun joueur convoqué pour ce match. Créez d'abord une convocation avant de composer l'équipe.
+    </div>
 <?php else: ?>
     <div class="text-center py-5 text-muted">
         <i class="bi bi-layout-text-sidebar fs-1 d-block mb-3"></i>Sélectionnez un match ci-dessus.

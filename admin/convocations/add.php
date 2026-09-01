@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     if (!$match_id) $errors[] = 'Veuillez sélectionner un match.';
+    if (count($joueurs_ids) > 22) $errors[] = 'Vous ne pouvez pas convoquer plus de 22 joueurs (actuellement : ' . count($joueurs_ids) . ' sélectionnés).';
+    if (count($joueurs_ids) < 18) $errors[] = 'Vous devez convoquer au moins 18 joueurs (actuellement : ' . count($joueurs_ids) . ' sélectionnés).';
 
     if (!$errors) {
         if ($editId && $conv) {
@@ -134,7 +136,8 @@ require_once ROOT_PATH . '/admin/includes/header.php';
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <span><i class="bi bi-people me-2"></i>Joueurs à convoquer</span>
-                <div class="d-flex gap-2 small">
+                <div class="d-flex align-items-center gap-2 small">
+                    <span id="convCounter" class="fw-semibold text-warning">0 / 22 (min. 18)</span>
                     <button type="button" class="btn btn-sm btn-outline-success" onclick="selectAll(true)">Tous</button>
                     <button type="button" class="btn btn-sm btn-outline-secondary" onclick="selectAll(false)">Aucun</button>
                 </div>
@@ -178,9 +181,38 @@ require_once ROOT_PATH . '/admin/includes/header.php';
 </form>
 
 <script>
-function selectAll(state) {
-    document.querySelectorAll('.joueur-check').forEach(c => c.checked = state);
-}
+(function () {
+    const MIN     = 18;
+    const MAX     = 22;
+    const counter = document.getElementById('convCounter');
+    const allBoxes = () => [...document.querySelectorAll('.joueur-check')];
+
+    function update() {
+        const boxes   = allBoxes();
+        const n       = boxes.filter(c => c.checked).length;
+
+        counter.textContent = n + ' / ' + MAX + ' (min. ' + MIN + ')';
+        counter.className   = n >= MAX ? 'fw-semibold text-danger'
+                             : n < MIN  ? 'fw-semibold text-warning'
+                             :            'fw-semibold text-success';
+
+        boxes.forEach(c => { if (!c.checked) c.disabled = (n >= MAX); });
+    }
+
+    window.selectAll = function (state) {
+        allBoxes().forEach((c, i) => {
+            c.disabled = false;
+            c.checked  = state && i < MAX;
+        });
+        update();
+    };
+
+    document.addEventListener('change', e => {
+        if (e.target.classList.contains('joueur-check')) update();
+    });
+
+    update();
+}());
 </script>
 
 <?php require_once ROOT_PATH . '/admin/includes/footer.php'; ?>

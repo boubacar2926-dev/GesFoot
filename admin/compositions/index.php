@@ -26,10 +26,38 @@ if ($matchId) {
     $composition = $stmt->fetchAll();
 }
 
+// Joueurs convoqués pour ce match : seuls eux peuvent être titulaires/remplaçants
+$convoquesIds = [];
+if ($matchId) {
+    $stmt = $pdo->prepare("
+        SELECT DISTINCT cj.joueur_id
+        FROM convocation_joueur cj
+        JOIN convocations cv ON cv.id = cj.convocation_id
+        WHERE cv.match_id = ?
+    ");
+    $stmt->execute([$matchId]);
+    $convoquesIds = array_column($stmt->fetchAll(), 'joueur_id');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrfVerify();
     $mid = (int)($_POST['match_id'] ?? 0);
     if ($mid <= 0) { setFlash('error', 'Match invalide.'); redirect('/admin/compositions/index.php'); }
+
+    $stmtConv = $pdo->prepare("
+        SELECT DISTINCT cj.joueur_id
+        FROM convocation_joueur cj
+        JOIN convocations cv ON cv.id = cj.convocation_id
+        WHERE cv.match_id = ?
+    ");
+    $stmtConv->execute([$mid]);
+    $convoquesMid = array_column($stmtConv->fetchAll(), 'joueur_id');
+
+    if (!$convoquesMid) {
+        setFlash('error', 'Impossible de composer l\'équipe : aucune convocation n\'existe pour ce match. Créez-la d\'abord.');
+        redirect('/admin/compositions/index.php?match_id=' . $mid);
+    }
+
     $joueurs_data = $_POST['joueurs'] ?? [];
     $validTypes   = ['Titulaire', 'Remplaçant'];
     try {
@@ -39,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($joueurs_data as $jid => $data) {
             $type = $data['type'] ?? '';
             if (!in_array($type, $validTypes)) continue;
+            if (!in_array((int)$jid, $convoquesMid, true)) continue; // joueur non convoqué : ignoré
             $ins->execute([$mid, (int)$jid, $type, ($data['poste'] ?? null) ?: null]);
         }
         $pdo->commit();
@@ -51,15 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     redirect('/admin/compositions/index.php?match_id=' . $mid);
 }
 
-// Joueurs disponibles pour ce match (depuis la convocation si elle existe)
+// Joueurs disponibles pour ce match = uniquement les joueurs convoqués
 $joueursDispos = [];
-if ($matchId) {
-    $stmt = $pdo->prepare("
-        SELECT j.* FROM joueurs j
-        WHERE j.statut = 'actif'
-        ORDER BY j.poste, j.nom
-    ");
-    $stmt->execute();
+if ($matchId && $convoquesIds) {
+    $in = implode(',', array_fill(0, count($convoquesIds), '?'));
+    $stmt = $pdo->prepare("SELECT * FROM joueurs WHERE statut = 'actif' AND id IN ($in) ORDER BY poste, nom");
+    $stmt->execute($convoquesIds);
     $joueursDispos = $stmt->fetchAll();
 }
 
@@ -169,7 +195,10 @@ require_once ROOT_PATH . '/admin/includes/header.php';
 </script>
 
 <?php elseif ($matchId): ?>
-    <div class="alert alert-info">Aucun joueur actif disponible pour créer une composition.</div>
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Aucun joueur convoqué pour ce match. Créez d'abord une convocation avant de composer l'équipe.
+    </div>
 <?php else: ?>
     <div class="text-center py-5 text-muted">
         <i class="bi bi-layout-text-sidebar fs-1 d-block mb-3"></i>

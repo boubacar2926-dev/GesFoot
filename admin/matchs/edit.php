@@ -18,9 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrfVerify();
     $adversaire = trim($_POST['adversaire'] ?? '');
     $date_match = $_POST['date_match'] ?? '';
+    $statutPost = $_POST['statut'] ?? 'Programmé';
     $errors = [];
     if (!$adversaire) $errors[] = "L'adversaire est requis.";
     if (!$date_match) $errors[] = "La date est requise.";
+
+    if ($statutPost === 'Terminé') {
+        $stmtCount = $pdo->prepare("
+            SELECT COUNT(*) FROM convocation_joueur cj
+            JOIN convocations cv ON cv.id = cj.convocation_id
+            WHERE cv.match_id = ?
+        ");
+        $stmtCount->execute([$id]);
+        if ((int)$stmtCount->fetchColumn() === 0) {
+            $errors[] = "Impossible de marquer ce match comme Terminé : aucun joueur n'a été convoqué. Créez d'abord une convocation (22 joueurs maximum).";
+        }
+    }
 
     if (!$errors) {
         $newCompId   = (int)($_POST['competition_id'] ?? 0) ?: null;

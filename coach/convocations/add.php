@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $joueurs_ids = array_map('intval', $_POST['joueurs'] ?? []);
     $errors = [];
     if (!$match_id) $errors[] = 'Veuillez sélectionner un match.';
-    if (count($joueurs_ids) > 18) $errors[] = 'Vous ne pouvez pas convoquer plus de 18 joueurs (actuellement : ' . count($joueurs_ids) . ' sélectionnés).';
+    if (count($joueurs_ids) > 22) $errors[] = 'Vous ne pouvez pas convoquer plus de 22 joueurs (actuellement : ' . count($joueurs_ids) . ' sélectionnés).';
+    if (count($joueurs_ids) < 18) $errors[] = 'Vous devez convoquer au moins 18 joueurs (actuellement : ' . count($joueurs_ids) . ' sélectionnés).';
 
     if (!$errors) {
         if ($editId && $conv) {
@@ -125,7 +126,7 @@ require_once ROOT_PATH . '/coach/includes/header.php';
             <div class="card-header d-flex align-items-center justify-content-between">
                 <span><i class="bi bi-people me-2"></i>Joueurs à convoquer</span>
                 <div class="d-flex align-items-center gap-2 small">
-                    <span id="convCounter" class="fw-semibold text-muted">0 / 18</span>
+                    <span id="convCounter" class="fw-semibold text-warning">0 / 22 (min. 18)</span>
                     <button type="button" id="btnTous" class="btn btn-sm btn-outline-success">Tous</button>
                     <button type="button" id="btnAucun" class="btn btn-sm btn-outline-secondary">Aucun</button>
                 </div>
@@ -165,7 +166,8 @@ require_once ROOT_PATH . '/coach/includes/header.php';
 
 <script>
 (function () {
-    const MAX     = 18;
+    const MIN     = 18;
+    const MAX     = 22;
     const counter = document.getElementById('convCounter');
     const allBoxes = () => [...document.querySelectorAll('.joueur-check')];
 
@@ -174,8 +176,10 @@ require_once ROOT_PATH . '/coach/includes/header.php';
         const checked = boxes.filter(c => c.checked);
         const n       = checked.length;
 
-        counter.textContent = n + ' / ' + MAX;
-        counter.className   = n >= MAX ? 'fw-semibold text-danger' : 'fw-semibold text-muted';
+        counter.textContent = n + ' / ' + MAX + ' (min. ' + MIN + ')';
+        counter.className   = n >= MAX ? 'fw-semibold text-danger'
+                             : n < MIN  ? 'fw-semibold text-warning'
+                             :            'fw-semibold text-success';
 
         // Bloquer les cases non cochées dès qu'on atteint la limite
         boxes.forEach(c => {
