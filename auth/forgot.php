@@ -22,6 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
+        // Sécurité mode démo : le compte administrateur principal ne peut pas être
+        // réinitialisé depuis cette page publique (même protection que admin/users/edit.php).
+        if ($user && (int)$user['id'] === 1) {
+            $user = null;
+        }
+
         if ($user) {
             $tempPass = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
             $hash     = password_hash($tempPass, PASSWORD_BCRYPT);

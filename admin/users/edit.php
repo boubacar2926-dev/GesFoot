@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrfVerify();
 
     // Sécurité mode démo : Empêcher la modification de l'admin principal
-    if ($targetUser['email'] === 'admin@club.com' || $id === 1) {
+    if ($targetUser['email'] === 'admin@club.fr' || $id === 1) {
         setFlash('error', "Action impossible : Le compte administrateur de démonstration ne peut pas être modifié.");
         redirect('/admin/users/index.php');
     }
