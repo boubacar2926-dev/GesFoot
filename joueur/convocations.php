@@ -19,7 +19,7 @@ if ($joueur) {
         JOIN convocations cv ON cv.id=cj.convocation_id
         JOIN matchs m ON m.id=cv.match_id
         LEFT JOIN competitions c ON c.id=m.competition_id
-        WHERE cj.joueur_id=?
+        WHERE cj.joueur_id=? AND cv.statut != 'Brouillon'
         ORDER BY m.date_match DESC
     ");
     $stmt->execute([$joueur['id']]);

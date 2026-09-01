@@ -34,7 +34,7 @@ if ($joueur) {
         JOIN convocations cv ON cv.id=cj.convocation_id
         JOIN matchs m ON m.id=cv.match_id
         LEFT JOIN competitions c ON c.id=m.competition_id
-        WHERE cj.joueur_id=? AND m.date_match >= CURDATE() AND m.statut='Programmé'
+        WHERE cj.joueur_id=? AND cv.statut='Publiée' AND m.date_match >= CURDATE() AND m.statut='Programmé'
         ORDER BY m.date_match ASC LIMIT 5
     ");
     $stmt->execute([$joueur['id']]);
@@ -122,6 +122,26 @@ require_once __DIR__ . '/includes/header.php';
     </div>
     <?php endforeach; ?>
 </div>
+
+<?php if ($prochains): ?>
+<div class="alert alert-success d-flex align-items-start gap-3 mb-4">
+    <i class="bi bi-bell-fill fs-4 mt-1"></i>
+    <div>
+        <div class="fw-bold mb-1">Vous êtes convoqué pour <?= count($prochains) ?> match(s) à venir :</div>
+        <ul class="mb-0 small">
+            <?php foreach ($prochains as $pc): ?>
+            <li>
+                vs <?= e($pc['adversaire']) ?> — <?= formatDate($pc['date_match']) ?>
+                <?= $pc['competition'] ? ' · ' . e($pc['competition']) : '' ?>
+                <?php if ($pc['lieu_rdv'] || $pc['heure_rdv']): ?>
+                    · RDV <?= $pc['lieu_rdv'] ? e($pc['lieu_rdv']) : '' ?><?= $pc['heure_rdv'] ? ' à ' . formatTime($pc['heure_rdv']) : '' ?>
+                <?php endif; ?>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+<?php endif; ?>
 
 <?php if ($nonConvoques): ?>
 <div class="alert alert-warning d-flex align-items-start gap-3 mb-4">
