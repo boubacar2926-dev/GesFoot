@@ -1,12 +1,14 @@
 Options -Indexes
 RewriteEngine On
-RewriteBase /projet_fin/
 
-# Redirect .php URLs to clean URLs (GET requests only — preserves POST form data)
-RewriteCond %{THE_REQUEST} ^GET\s(/projet_fin/[^?\s]+)\.php[\s?] [NC]
+# Redirige les URLs en .php vers leur version sans extension (GET uniquement —
+# préserve les données POST des formulaires). Pas de RewriteBase codée en dur :
+# la capture vient de THE_REQUEST (chemin absolu), donc ça fonctionne quel que
+# soit le sous-dossier ou domaine sur lequel le site est déployé.
+RewriteCond %{THE_REQUEST} ^GET\s([^\s?]+)\.php[\s?] [NC]
 RewriteRule ^ %1 [R=301,L,QSA]
 
-# Internally serve .php for clean URLs
+# Sert en interne le fichier .php correspondant à une URL sans extension
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
