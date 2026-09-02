@@ -59,6 +59,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $validTypes = ['Titulaire', 'Remplaçant'];
+
+    $nbTitulaires = 0;
+    $nbRemplacants = 0;
+    foreach ($_POST['joueurs'] ?? [] as $jid => $data) {
+        $type = $data['type'] ?? '';
+        if (!in_array($type, $validTypes, true)) continue;
+        if (!in_array((int)$jid, $convoquesMid, true)) continue;
+        if ($type === 'Titulaire') $nbTitulaires++;
+        else $nbRemplacants++;
+    }
+    if ($nbTitulaires > 11) {
+        setFlash('error', "Une composition ne peut pas compter plus de 11 titulaires (actuellement : $nbTitulaires).");
+        redirect('/coach/compositions/index.php?match_id=' . $mid);
+    }
+    if ($nbRemplacants < 7) {
+        setFlash('error', "Une composition doit compter au moins 7 remplaçants (actuellement : $nbRemplacants).");
+        redirect('/coach/compositions/index.php?match_id=' . $mid);
+    }
+
     try {
         $pdo->beginTransaction();
         $pdo->prepare("DELETE FROM compositions WHERE match_id=?")->execute([$mid]);
@@ -112,7 +131,7 @@ require_once ROOT_PATH . '/coach/includes/header.php';
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <span><i class="bi bi-layout-text-sidebar me-2"></i>Composition de l'équipe</span>
-            <small class="text-muted fw-semibold" id="compteur">Titulaires: 0 | Remplaçants: 0</small>
+            <small class="text-muted fw-semibold" id="compteur">Titulaires : 0 / 11 · Remplaçants : 0 (min. 7)</small>
         </div>
         <div class="card-body p-0">
             <table class="table mb-0 align-middle">
@@ -166,13 +185,16 @@ require_once ROOT_PATH . '/coach/includes/header.php';
 
 <script>
 (function () {
+    var MAX_TIT = 11, MIN_REMP = 7;
+    var compteur = document.getElementById('compteur');
     function updateCompteur() {
         var t = 0, r = 0;
         document.querySelectorAll('.role-select').forEach(function (s) {
             if (s.value === 'Titulaire') t++;
             else if (s.value === 'Remplaçant') r++;
         });
-        document.getElementById('compteur').textContent = 'Titulaires : ' + t + ' | Remplaçants : ' + r;
+        compteur.textContent = 'Titulaires : ' + t + ' / ' + MAX_TIT + ' · Remplaçants : ' + r + ' (min. ' + MIN_REMP + ')';
+        compteur.className = (t > MAX_TIT || r < MIN_REMP) ? 'text-danger fw-semibold' : 'text-success fw-semibold';
     }
     document.querySelectorAll('.role-select').forEach(function (s) {
         s.addEventListener('change', updateCompteur);
