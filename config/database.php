@@ -4,6 +4,7 @@
 // ============================================================
 
 define('DB_HOST',    'localhost');
+define('DB_PORT',    '3307');
 define('DB_NAME',    'football_club');
 define('DB_USER',    'root');
 define('DB_PASS',    '');
@@ -21,8 +22,8 @@ function getPDO(): PDO {
     static $pdo = null;
     if ($pdo === null) {
         $dsn = sprintf(
-            'mysql:host=%s;dbname=%s;charset=%s',
-            DB_HOST, DB_NAME, DB_CHARSET
+            'mysql:host=%s;port=%s;dbname=%s;charset=%s',
+            DB_HOST, DB_PORT, DB_NAME, DB_CHARSET
         );
         try {
             $pdo = new PDO($dsn, DB_USER, DB_PASS, [
