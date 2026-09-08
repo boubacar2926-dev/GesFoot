@@ -3,11 +3,11 @@
 -- Schéma de base de données
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS football_club
+/*CREATE DATABASE IF NOT EXISTS football_club
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE football_club;
+USE football_club;*/
 
 -- ============================================================
 -- TABLE: clubs

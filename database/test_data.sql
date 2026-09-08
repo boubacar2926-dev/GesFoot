@@ -3,7 +3,7 @@
 -- Mot de passe pour tous les comptes : Test1234
 -- ============================================================
 
-USE football_club;
+/*USE football_club;*/
 
 -- 1. CLUB
 UPDATE clubs SET
