@@ -25,39 +25,23 @@ if ($joueur) {
     $stats = $stmt->fetch();
 }
 
-// Prochains matchs pour lesquels il est convoqué
+// Prochains matchs du calendrier (affichés qu'une convocation existe ou non ;
+// le statut de convocation de chaque match est simplement indiqué à côté).
 $prochains = [];
 if ($joueur) {
     $stmt = $pdo->prepare("
-        SELECT m.*, c.nom AS competition, cv.lieu_rdv, cv.heure_rdv
-        FROM convocation_joueur cj
-        JOIN convocations cv ON cv.id=cj.convocation_id
-        JOIN matchs m ON m.id=cv.match_id
-        LEFT JOIN competitions c ON c.id=m.competition_id
-        WHERE cj.joueur_id=? AND cv.statut='Publiée' AND m.date_match >= CURDATE() AND m.statut='Programmé'
+        SELECT m.*, c.nom AS competition,
+            cv.id AS convocation_id, cv.lieu_rdv, cv.heure_rdv,
+            (SELECT COUNT(*) FROM convocation_joueur cj
+                WHERE cj.convocation_id = cv.id AND cj.joueur_id = ?) AS convoque
+        FROM matchs m
+        LEFT JOIN competitions c ON c.id = m.competition_id
+        LEFT JOIN convocations cv ON cv.match_id = m.id AND cv.statut = 'Publiée'
+        WHERE m.statut = 'Programmé' AND m.date_match >= CURDATE()
         ORDER BY m.date_match ASC LIMIT 5
     ");
     $stmt->execute([$joueur['id']]);
     $prochains = $stmt->fetchAll();
-}
-
-// Matchs à venir avec convocation publiée où le joueur n'est PAS dans la liste
-$nonConvoques = [];
-if ($joueur) {
-    $stmt = $pdo->prepare("
-        SELECT m.*, c.nom AS competition
-        FROM matchs m
-        LEFT JOIN competitions c ON c.id = m.competition_id
-        JOIN convocations cv ON cv.match_id = m.id AND cv.statut = 'Publiée'
-        WHERE m.date_match >= CURDATE() AND m.statut = 'Programmé'
-          AND NOT EXISTS (
-              SELECT 1 FROM convocation_joueur cj
-              WHERE cj.convocation_id = cv.id AND cj.joueur_id = ?
-          )
-        ORDER BY m.date_match ASC
-    ");
-    $stmt->execute([$joueur['id']]);
-    $nonConvoques = $stmt->fetchAll();
 }
 
 // Derniers matchs joués
@@ -123,52 +107,19 @@ require_once __DIR__ . '/includes/header.php';
     <?php endforeach; ?>
 </div>
 
-<?php if ($prochains): ?>
-<div class="alert alert-success d-flex align-items-start gap-3 mb-4">
-    <i class="bi bi-bell-fill fs-4 mt-1"></i>
-    <div>
-        <div class="fw-bold mb-1">Vous êtes convoqué pour <?= count($prochains) ?> match(s) à venir :</div>
-        <ul class="mb-0 small">
-            <?php foreach ($prochains as $pc): ?>
-            <li>
-                vs <?= e($pc['adversaire']) ?> — <?= formatDate($pc['date_match']) ?>
-                <?= $pc['competition'] ? ' · ' . e($pc['competition']) : '' ?>
-                <?php if ($pc['lieu_rdv'] || $pc['heure_rdv']): ?>
-                    · RDV <?= $pc['lieu_rdv'] ? e($pc['lieu_rdv']) : '' ?><?= $pc['heure_rdv'] ? ' à ' . formatTime($pc['heure_rdv']) : '' ?>
-                <?php endif; ?>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
-<?php endif; ?>
-
-<?php if ($nonConvoques): ?>
-<div class="alert alert-warning d-flex align-items-start gap-3 mb-4">
-    <i class="bi bi-bell-fill fs-4 mt-1"></i>
-    <div>
-        <div class="fw-bold mb-1">Vous n'êtes pas convoqué pour <?= count($nonConvoques) ?> match(s) à venir :</div>
-        <ul class="mb-0 small">
-            <?php foreach ($nonConvoques as $nc): ?>
-            <li>
-                vs <?= e($nc['adversaire']) ?> — <?= formatDate($nc['date_match']) ?>
-                <?= $nc['competition'] ? ' · ' . e($nc['competition']) : '' ?>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
-<?php endif; ?>
-
 <div class="row g-4">
     <!-- Prochains matchs -->
     <div class="col-lg-6">
         <div class="card h-100">
-            <div class="card-header"><i class="bi bi-clock text-warning me-2"></i>Mes prochains matchs</div>
+            <div class="card-header"><i class="bi bi-clock text-warning me-2"></i>Prochains matchs</div>
             <div class="card-body p-0">
                 <?php if ($prochains): ?>
                 <ul class="list-group list-group-flush">
-                    <?php foreach ($prochains as $m): ?>
+                    <?php foreach ($prochains as $m):
+                        if ($m['convocation_id'] === null)      { $badgeCls = 'bg-secondary'; $badgeTxt = 'En attente de convocation'; }
+                        elseif ((int)$m['convoque'] > 0)        { $badgeCls = 'bg-success';   $badgeTxt = 'Convoqué'; }
+                        else                                     { $badgeCls = 'bg-warning text-dark'; $badgeTxt = 'Non convoqué'; }
+                    ?>
                     <li class="list-group-item px-3 py-3">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -178,7 +129,7 @@ require_once __DIR__ . '/includes/header.php';
                                     <?= $m['heure_match'] ? ' à '.formatTime($m['heure_match']) : '' ?>
                                     <?= $m['competition'] ? ' · '.e($m['competition']) : '' ?>
                                 </small>
-                                <?php if ($m['lieu_rdv'] || $m['heure_rdv']): ?>
+                                <?php if ((int)$m['convoque'] > 0 && ($m['lieu_rdv'] || $m['heure_rdv'])): ?>
                                 <div class="mt-1 small text-info">
                                     <i class="bi bi-pin-map me-1"></i>
                                     RDV : <?= $m['lieu_rdv'] ? e($m['lieu_rdv']) : '' ?>
@@ -186,7 +137,7 @@ require_once __DIR__ . '/includes/header.php';
                                 </div>
                                 <?php endif; ?>
                             </div>
-                            <span class="badge bg-success ms-2">Convoqué</span>
+                            <span class="badge <?= $badgeCls ?> ms-2"><?= $badgeTxt ?></span>
                         </div>
                     </li>
                     <?php endforeach; ?>

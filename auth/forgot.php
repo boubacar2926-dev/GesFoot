@@ -78,19 +78,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="login-card">
     <div class="login-header">
-        <div class="mb-3">
-            <span style="background:rgba(255,255,255,.15);display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:16px;">
-                <i class="bi bi-key-fill fs-2 text-warning"></i>
-            </span>
-        </div>
+        <span class="login-icon">
+            <i class="bi bi-key-fill text-warning"></i>
+        </span>
         <h4 class="fw-bold mb-1">Mot de passe oublié</h4>
-        <p class="opacity-75 mb-0 small">Réinitialisation de votre accès</p>
+        <p class="opacity-75 mb-0">Réinitialisation de votre accès</p>
     </div>
 
     <div class="login-body">
 
         <?php if ($message): ?>
-            <div class="alert alert-<?= $type ?>">
+            <div class="alert alert-<?= $type ?> small">
                 <?= e($message) ?>
             </div>
             <?php if ($type === 'success'): ?>
@@ -101,11 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="<?= BASE_URL ?>/auth/forgot.php" class="btn btn-outline-secondary w-100 mt-2">Réessayer</a>
             <?php endif; ?>
         <?php else: ?>
-            <p class="text-muted small mb-4">Entrez votre adresse email. Un mot de passe temporaire sera généré immédiatement.</p>
+            <p class="text-muted mb-3">Entrez votre adresse email. Un mot de passe temporaire sera généré immédiatement.</p>
 
             <form method="POST" novalidate>
                 <?= csrfField() ?>
-                <div class="mb-4">
+                <div class="mb-3">
                     <label class="form-label">Adresse email</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
@@ -119,8 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         <?php endif; ?>
 
-        <div class="text-center mt-4 pt-3 border-top">
-            <a href="<?= BASE_URL ?>/auth/login.php" class="text-muted small">
+        <div class="login-foot">
+            <a href="<?= BASE_URL ?>/auth/login.php" class="text-muted">
                 <i class="bi bi-arrow-left"></i> Retour à la connexion
             </a>
         </div>

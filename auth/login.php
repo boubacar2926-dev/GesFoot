@@ -89,21 +89,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="login-card">
     <div class="login-header">
-        <div class="mb-3">
-            <span style="background:rgba(255,255,255,.15);display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:16px;">
-                <i class="bi bi-trophy-fill fs-2 text-warning"></i>
-            </span>
-        </div>
+        <span class="login-icon">
+            <i class="bi bi-trophy-fill text-warning"></i>
+        </span>
         <h4 class="fw-bold mb-1">Football Club</h4>
-        <p class="opacity-75 mb-0 small">Plateforme de gestion d'équipe</p>
+        <p class="opacity-75 mb-0">Plateforme de gestion d'équipe</p>
     </div>
 
     <div class="login-body">
-        <h5 class="fw-bold mb-1">Connexion</h5>
-        <p class="text-muted small mb-4">Entrez vos identifiants pour accéder à votre espace.</p>
+        <h5 class="fw-bold mb-1" style="font-size:1rem;">Connexion</h5>
+        <p class="text-muted mb-3">Entrez vos identifiants pour accéder à votre espace.</p>
 
         <?php if ($error): ?>
-            <div class="alert alert-danger d-flex align-items-center gap-2 py-2">
+            <div class="alert alert-danger d-flex align-items-center gap-2 py-2 small">
                 <i class="bi bi-x-circle-fill"></i> <?= e($error) ?>
             </div>
         <?php endif; ?>
@@ -121,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
                 <label class="form-label">Mot de passe</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
@@ -139,8 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
         </form>
 
-        <div class="text-center mt-4 pt-3 border-top">
-            <a href="<?= BASE_URL ?>/auth/forgot.php" class="text-muted small">
+        <div class="login-foot">
+            <a href="<?= BASE_URL ?>/auth/forgot.php" class="text-muted">
                 <i class="bi bi-key"></i> Mot de passe oublié ?
             </a>
         </div>
