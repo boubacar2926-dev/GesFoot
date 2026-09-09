@@ -20,7 +20,7 @@ $prochains = $pdo->query("
     FROM matchs m
     LEFT JOIN competitions c ON c.id=m.competition_id
     WHERE m.statut='Programmé' AND m.date_match >= CURDATE()
-    ORDER BY m.date_match ASC LIMIT 5
+    ORDER BY m.date_match ASC LIMIT 1
 ")->fetchAll();
 
 // Derniers résultats
@@ -75,7 +75,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="col-lg-7">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <span><i class="bi bi-clock text-warning me-2"></i>Prochains matchs</span>
+                <span><i class="bi bi-clock text-warning me-2"></i>Prochain match</span>
                 <a href="<?= BASE_URL ?>/coach/matchs.php" class="btn btn-sm btn-outline-success">Voir tout</a>
             </div>
             <div class="card-body p-0 table-responsive">
