@@ -47,6 +47,10 @@ function getPDO(): PDO {
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
+                // Certains hébergeurs MySQL managés (ex. Aiven) n'appliquent pas de façon
+                // fiable le paramètre "charset" du DSN pour les requêtes préparées natives ;
+                // on le force explicitement pour éviter les erreurs 1366 sur les accents.
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . DB_CHARSET,
             ]);
         } catch (PDOException $e) {
             http_response_code(500);
