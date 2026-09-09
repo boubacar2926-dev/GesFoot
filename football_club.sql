@@ -498,7 +498,7 @@ CREATE TABLE `utilisateurs` (
 INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `telephone`, `mot_de_passe`, `role`, `statut`, `photo`, `created_at`, `updated_at`) VALUES
 (1, 'Admin', 'Système', 'admin@club.fr', NULL, '$2y$10$HtohZglm8TmQMWHxe0UPKu..Msj1RCawKo5fL9agDVgx9HV3B/wHu', 'admin', 'actif', NULL, '2026-06-26 10:40:39', '2026-09-02 11:17:08'),
 (2, 'Diagne', 'Ibrahima', 'coach@etoiledeakar.sn', NULL, '$2y$10$gurrIpoDe.UmZtjqTWVwZumo6.Lc2Sw/wcle58XVplwDeLmJ8kyVa', 'coach', 'actif', NULL, '2026-06-26 10:52:43', '2026-06-26 10:52:43'),
-(3, 'Sarr', 'Cheikh', 'staff@etoiledeakar.sn', NULL, '.UmZtjqTWVwZumo6.Lc2Sw/wcle58XVplwDeLmJ8kyVa', 'staff', 'actif', NULL, '2026-06-26 10:52:43', '2026-07-08 14:31:39'),
+(3, 'Sarr', 'Cheikh', 'staff@etoiledeakar.sn', NULL, '$2y$10$gurrIpoDe.UmZtjqTWVwZumo6.Lc2Sw/wcle58XVplwDeLmJ8kyVa', 'staff', 'actif', NULL, '2026-06-26 10:52:43', '2026-07-08 14:31:39'),
 (4, 'Cissé', 'Moussa', 'm.cisse@etoiledeakar.sn', NULL, '$2y$10$9r7mTKtTf2WBEaLZbcoL7uPxcyHOFQmjRt0vBCDjy7n.p8VmDzDzm', 'joueur', 'actif', NULL, '2026-06-26 10:52:43', '2026-07-08 14:40:20'),
 (5, 'Gueye', 'Aliou', 'a.gueye@etoiledeakar.sn', NULL, '$2y$10$gurrIpoDe.UmZtjqTWVwZumo6.Lc2Sw/wcle58XVplwDeLmJ8kyVa', 'joueur', 'actif', NULL, '2026-06-26 10:52:43', '2026-06-26 10:52:43'),
 (6, 'Diallo', 'Papa', 'p.diallo@etoiledeakar.sn', NULL, '$2y$10$gurrIpoDe.UmZtjqTWVwZumo6.Lc2Sw/wcle58XVplwDeLmJ8kyVa', 'joueur', 'actif', NULL, '2026-06-26 10:52:43', '2026-06-26 10:52:43'),

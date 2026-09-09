@@ -72,7 +72,7 @@ function csrfField(): string {
 function csrfVerify(): void {
     startSession();
     $token = $_POST['csrf_token'] ?? '';
-    if (!hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
+    if (empty($_SESSION['csrf_token']) || $token === '' || !hash_equals($_SESSION['csrf_token'], $token)) {
         http_response_code(403);
         die('Token CSRF invalide.');
     }

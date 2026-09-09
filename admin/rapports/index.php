@@ -56,14 +56,14 @@ switch ($type) {
         $data = $pdo->query("
             SELECT m.date_match, m.adversaire, m.score_equipe, m.score_adverse,
                 m.domicile_exterieur, c.nom AS competition,
-                COUNT(cv.id) AS nb_convoqués,
-                SUM(s.buts) AS buts_match
+                (SELECT COUNT(*) FROM convocation_joueur cj
+                    JOIN convocations cv ON cv.id = cj.convocation_id
+                    WHERE cv.match_id = m.id) AS nb_convoqués,
+                (SELECT SUM(s.buts) FROM statistiques s WHERE s.match_id = m.id) AS buts_match
             FROM matchs m
             LEFT JOIN competitions c ON c.id=m.competition_id
-            LEFT JOIN convocations cv ON cv.match_id=m.id
-            LEFT JOIN statistiques s ON s.match_id=m.id
             WHERE m.statut='Terminé'
-            GROUP BY m.id ORDER BY m.date_match DESC
+            ORDER BY m.date_match DESC
         ")->fetchAll();
         break;
 }
